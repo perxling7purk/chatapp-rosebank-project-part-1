@@ -19,5 +19,22 @@ jobs:
           distribution: temurin
           java-version: '26'
 
-      - name: Build and run tests with Ant
-        run: ant test
+      - name: Compile application
+        run: ant compile
+
+      - name: Download JUnit 5
+        run: |
+          curl -L --fail -o junit-platform-console-standalone.jar \
+            https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.3/junit-platform-console-standalone-1.10.3.jar
+
+      - name: Compile tests
+        run: |
+          mkdir -p build/test/classes
+          javac -cp "build/classes:junit-platform-console-standalone.jar" \
+            -d build/test/classes $(find test -name "*.java")
+
+      - name: Run tests
+        run: |
+          java -jar junit-platform-console-standalone.jar execute \
+            --class-path build/classes:build/test/classes \
+            --scan-class-path
