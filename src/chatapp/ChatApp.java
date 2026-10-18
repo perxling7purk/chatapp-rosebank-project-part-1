@@ -67,10 +67,107 @@ public class ChatApp {
                 loginPassword
         );
 
-        // Display login result
-        System.out.println();
-        System.out.println(user.returnLoginStatus(loginStatus));
-    
-    
-}
+        
+        if (loginStatus) {
+
+            System.out.println();
+            System.out.println("Welcome to QuickChat.");
+
+            System.out.print("How many messages would you like to enter? ");
+            int numberOfMessages = lolchat.nextInt();
+            lolchat.nextLine();
+
+            int messagesEntered = 0;
+
+            while (true) {
+
+                System.out.println();
+                System.out.println("1) Send Messages");
+                System.out.println("2) Show recently sent messages");
+                System.out.println("3) Quit");
+                System.out.print("Choose an option: ");
+
+                int option = lolchat.nextInt();
+                lolchat.nextLine();
+
+                if (option == 1) {
+
+                    if (messagesEntered >= numberOfMessages) {
+                        System.out.println("You have reached your message limit.");
+                    } else {
+
+                        System.out.print("Enter recipient cellphone number: ");
+                        String recipient = lolchat.nextLine();
+
+                        System.out.print("Enter your message: ");
+                        String messageText = lolchat.nextLine();
+
+                        String messageID = Message.generateMessageID();
+
+                        Message message = new Message(
+                                messageID,
+                                messagesEntered,
+                                recipient,
+                                messageText
+                        );
+
+                        if (!message.checkMessageID()) {
+                            System.out.println("Invalid message ID.");
+                        } else if (!message.checkRecipientCell().equals(
+                                "Cell phone number successfully captured.")) {
+                            System.out.println(message.checkRecipientCell());
+                        } else if (!message.checkMessageLength().equals(
+                                "Message ready to send.")) {
+                            System.out.println(message.checkMessageLength());
+                        } else {
+
+                            System.out.println(message.createMessageHash());
+
+                            System.out.println("1) Send Message");
+                            System.out.println("2) Disregard Message");
+                            System.out.println("3) Store Message");
+                            System.out.print("Choose an option: ");
+
+                            int choice = lolchat.nextInt();
+                            lolchat.nextLine();
+
+                            if (choice == 3) {
+                                System.out.println(message.storeMessage());
+                            } else {
+                                System.out.println(message.SentMessage(choice));
+                            }
+
+                            if (choice == 1) {
+                                System.out.println(message.printMessages());
+                            }
+
+                            messagesEntered++;
+                        }
+                    }
+
+                } else if (option == 2) {
+
+                    System.out.println("Coming Soon.");
+
+                } else if (option == 3) {
+
+                    System.out.println("Total messages sent: "
+                            + Message.returnTotalMessages());
+                    System.out.println("Goodbye!");
+                    break;
+
+                } else {
+
+                    System.out.println("Invalid option. Please try again.");
+                }
+            }
+
+        } else {
+
+            System.out.println(
+                    user.returnLoginStatus(loginStatus)
+            );
+        }
+
+    }
 }
