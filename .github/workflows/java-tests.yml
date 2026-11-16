@@ -30,11 +30,11 @@ jobs:
       - name: Compile tests
         run: |
           mkdir -p build/test/classes
-          javac -cp "build/classes:junit-platform-console-standalone.jar" \
+          javac -cp "build/classes:lib/json-simple-1.1.1.jar:junit-platform-console-standalone.jar" \
             -d build/test/classes $(find test -name "*.java")
 
       - name: Run tests
         run: |
           java -jar junit-platform-console-standalone.jar execute \
-            --class-path build/classes:build/test/classes \
+            --class-path build/classes:build/test/classes:lib/json-simple-1.1.1.jar \
             --scan-class-path
