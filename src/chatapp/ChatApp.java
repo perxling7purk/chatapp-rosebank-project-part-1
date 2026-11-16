@@ -19,6 +19,8 @@ public class ChatApp {
         // TODO code application logic here
         
           Scanner lolchat = new Scanner(System.in);
+          
+          Message.loadStoredMessages();
 
         // Registration
         System.out.println("=== REGISTRATION ===");
@@ -84,7 +86,8 @@ public class ChatApp {
                 System.out.println();
                 System.out.println("1) Send Messages");
                 System.out.println("2) Show recently sent messages");
-                System.out.println("3) Quit");
+                System.out.println("3) Stored Messages");
+                System.out.println("4) Quit");
                 System.out.print("Choose an option: ");
 
                 int option = lolchat.nextInt();
@@ -133,8 +136,15 @@ public class ChatApp {
 
                             if (choice == 3) {
                                 System.out.println(message.storeMessage());
-                            } else {
+                                message.addMessageToArray(choice);
+
+                            } 
+                            else {
                                 System.out.println(message.SentMessage(choice));
+
+                                if (choice == 1 || choice == 2) {
+                                    message.addMessageToArray(choice);
+                                }
                             }
 
                             if (choice == 1) {
@@ -145,11 +155,62 @@ public class ChatApp {
                         }
                     }
 
-                } else if (option == 2) {
+                } 
+                else if (option == 2) {
 
-                    System.out.println("Coming Soon.");
+    Message.displayArrayContents();
 
+
+                
                 } else if (option == 3) {
+
+    System.out.println("\n--- STORED MESSAGES MENU ---");
+    System.out.println("1) Display sender and recipient");
+    System.out.println("2) Display longest message");
+    System.out.println("3) Search message by ID");
+    System.out.println("4) Search messages by recipient");
+    System.out.println("5) Delete message using hash");
+    System.out.println("6) Display full report");
+    System.out.print("Choose an option: ");
+
+    int storedOption = lolchat.nextInt();
+    lolchat.nextLine();
+
+    if (storedOption == 1) {
+    Message.displaySendersAndRecipients();
+} 
+    else if (storedOption == 2) {
+    Message.displayLongestMessage();
+} 
+    else if (storedOption == 3) {
+
+    System.out.print("Enter message ID: ");
+    String searchID = lolchat.nextLine();
+
+    Message.searchMessageByID(searchID);
+    } 
+    else if (storedOption == 4) {
+
+    System.out.print("Enter recipient cellphone number: ");
+    String searchRecipient = lolchat.nextLine();
+
+    Message.searchMessagesByRecipient(searchRecipient);
+    } 
+    else if (storedOption == 5) {
+
+    System.out.print("Enter message hash: ");
+    String searchHash = lolchat.nextLine();
+
+    System.out.println(Message.deleteMessageByHash(searchHash));
+    } 
+    else if (storedOption == 6) {
+    Message.displayFullReport();
+    } 
+    else {
+        System.out.println("Invalid option.");
+    }
+
+} else if (option == 4) {
 
                     System.out.println("Total messages sent: "
                             + Message.returnTotalMessages());
@@ -162,7 +223,8 @@ public class ChatApp {
                 }
             }
 
-        } else {
+        } 
+        else {
 
             System.out.println(
                     user.returnLoginStatus(loginStatus)

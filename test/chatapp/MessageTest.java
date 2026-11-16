@@ -121,7 +121,129 @@ public class MessageTest {
                 message.storeMessage()
         );
     }
+@Test
+public void testSentMessagesArray() {
 
+    Message message1 = new Message(
+            "1111111111", 0,
+            "+27834557896",
+            "Did you get the cake?"
+    );
+
+    Message message2 = new Message(
+            "2222222222", 1,
+            "+27838884567",
+            "It is dinner time!"
+    );
+
+    message1.addMessageToArray(1);
+    message2.addMessageToArray(1);
+
+    assertEquals("Did you get the cake?", Message.getSentMessage(0));
+    assertEquals("It is dinner time!", Message.getSentMessage(1));
 }
-    
 
+@Test
+public void testLongestStoredMessage() {
+
+    Message message = new Message(
+            "1111111111", 0,
+            "+27838884567",
+            "Where are you? You are late! I have asked you to be on time."
+    );
+
+    message.createMessageHash();
+    message.addMessageToArray(3);
+
+    assertEquals(
+            "Where are you? You are late! I have asked you to be on time.",
+            Message.getLongestStoredMessage()
+    );
+}
+@Test
+public void testSearchMessageByID() {
+
+    Message message = new Message(
+            "3333333333", 0,
+            "+27834557896",
+            "Did you get the cake?"
+    );
+
+    message.createMessageHash();
+    message.addMessageToArray(3);
+
+    assertEquals(
+            "Recipient: +27834557896\nMessage: Did you get the cake?",
+            Message.getMessageByID("3333333333")
+    );
+}
+@Test
+public void testSearchMessagesByRecipient() {
+
+    Message message1 = new Message(
+            "4444444444", 0,
+            "+27838884567",
+            "Where are you?"
+    );
+
+    Message message2 = new Message(
+            "5555555555", 1,
+            "+27838884567",
+            "I am waiting for you."
+    );
+
+    message1.createMessageHash();
+    message2.createMessageHash();
+
+    message1.addMessageToArray(3);
+    message2.addMessageToArray(3);
+
+    assertEquals(
+            "Message: Where are you?\nMessage: I am waiting for you.",
+            Message.getMessagesByRecipient("+27838884567")
+    );
+}
+@Test
+public void testDeleteMessageByHash() {
+
+    Message message = new Message(
+            "6666666666", 0,
+            "+27838884567",
+            "Where are you? You are late!"
+    );
+
+    String hash = message.createMessageHash();
+
+    message.addMessageToArray(3);
+
+    assertEquals(
+            "Message: 'Where are you? You are late!' successfully deleted.",
+            Message.deleteMessageByHash(hash)
+    );
+}
+@Test
+public void testFullMessageReport() {
+
+    String oldReport = Message.getFullReport();
+
+    Message message = new Message(
+            "7777777777", 0,
+            "+27838884567",
+            "Hello report"
+    );
+
+    message.createMessageHash();
+    message.addMessageToArray(3);
+
+    String expectedReport = oldReport
+            + "Message ID: 7777777777\n"
+            + "Message Hash: 77:0:HELLOREPORT\n"
+            + "Recipient: +27838884567\n"
+            + "Message: Hello report\n";
+
+    assertEquals(
+            expectedReport,
+            Message.getFullReport()
+    );
+}
+}
