@@ -1,0 +1,40 @@
+
+name: QuickChat Java Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '26'
+
+      - name: Compile application
+        run: ant compile
+
+      - name: Download JUnit 5
+        run: |
+          curl -L --fail -o junit-platform-console-standalone.jar \
+            https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.3/junit-platform-console-standalone-1.10.3.jar
+
+      - name: Compile tests
+        run: |
+          mkdir -p build/test/classes
+          javac -cp "build/classes:junit-platform-console-standalone.jar" \
+            -d build/test/classes $(find test -name "*.java")
+
+      - name: Run tests
+        run: |
+          java -jar junit-platform-console-standalone.jar execute \
+            --class-path build/classes:build/test/classes \
+            --scan-class-path
